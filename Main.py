@@ -169,6 +169,8 @@ print_solution(solution)
 # Ajustarea numărului de indicii pentru un puzzle mai dificil
 clue_count = 30  # Ajustați această valoare pentru puzzle-uri mai dificile
 
+
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
