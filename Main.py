@@ -9,7 +9,7 @@ pygame.init()
 # Setarea ecranului
 width, height = 640, 640
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption('Exemplu de rezolvare Sudoku cu Pygame')
+pygame.display.set_caption('Sudoku')
 
 # Definirea culorilor
 white = (255, 255, 255)
@@ -170,147 +170,148 @@ print_solution(solution)
 clue_count = 30  # Ajustați această valoare pentru puzzle-uri mai dificile
 
 
+if __name__ == '__main__':
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # Butonul stâng al mouse-ului
-                if not (usor_pressed or mediu_pressed or greu_pressed):
-                    for idx, rect in enumerate(buttons):
-                        if rect.collidepoint(event.pos):
-                            if button_texts[idx] == 'Usor':
-                                usor_pressed = True
-                                mediu_pressed = False
-                                greu_pressed = False
-                                prefilled_cells.clear()
-                                grid = create_puzzle_with_randomization(solution,
-                                                                        clue_count + 20)  # Nivel ușor cu mai multe indicii
-                                selected_cell = None
-                                for i in range(9):
-                                    for j in range(9):
-                                        if grid[i][j] != 0:
-                                            prefilled_cells.add((i, j))
-                                game_won = False
-                                print(f"{button_texts[idx]} apăsat")
-                            elif button_texts[idx] == 'Mediu':
-                                usor_pressed = False
-                                mediu_pressed = True
-                                greu_pressed = False
-                                prefilled_cells.clear()
-                                grid = create_puzzle_with_randomization(solution,
-                                                                        clue_count + 10)  # Nivel mediu cu indicii medii
-                                selected_cell = None
-                                for i in range(9):
-                                    for j in range(9):
-                                        if grid[i][j] != 0:
-                                            prefilled_cells.add((i, j))
-                                game_won = False
-                                print(f"{button_texts[idx]} apăsat")
-                            elif button_texts[idx] == 'Greu':
-                                usor_pressed = False
-                                mediu_pressed = False
-                                greu_pressed = True
-                                prefilled_cells.clear()
-                                grid = create_puzzle_with_randomization(solution,
-                                                                        clue_count)  # Nivel greu cu mai puține indicii
-                                selected_cell = None
-                                for i in range(9):
-                                    for j in range(9):
-                                        if grid[i][j] != 0:
-                                            prefilled_cells.add((i, j))
-                                game_won = False
-                                print(f"{button_texts[idx]} apăsat")
-                            break  # Se întrerupe bucla după apăsarea unui buton
-                else:
-                    # Verificare dacă a fost apăsată o celulă în grilă
-                    offset_x = (width - 3 * large_square_size) // 2
-                    offset_y = (height - 3 * large_square_size) // 2
-                    for i in range(9):
-                        for j in range(9):
-                            small_rect = pygame.Rect(offset_x + j * small_square_size,
-                                                     offset_y + i * small_square_size,
-                                                     small_square_size, small_square_size)
-                            if small_rect.collidepoint(event.pos):
-                                selected_cell = (i, j)
-                                break
-        elif event.type == pygame.KEYDOWN:
-            if selected_cell and (event.unicode.isdigit() or event.key == pygame.K_BACKSPACE):
-                row, col = selected_cell
-                if (row, col) not in prefilled_cells:  # Se permite modificarea doar dacă celula nu este precompletată
-                    if event.key == pygame.K_BACKSPACE or event.unicode == '0':
-                        grid[row][col] = 0  # Se șterge conținutul celulei
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Butonul stâng al mouse-ului
+                    if not (usor_pressed or mediu_pressed or greu_pressed):
+                        for idx, rect in enumerate(buttons):
+                            if rect.collidepoint(event.pos):
+                                if button_texts[idx] == 'Usor':
+                                    usor_pressed = True
+                                    mediu_pressed = False
+                                    greu_pressed = False
+                                    prefilled_cells.clear()
+                                    grid = create_puzzle_with_randomization(solution,
+                                                                            clue_count + 20)  # Nivel ușor cu mai multe indicii
+                                    selected_cell = None
+                                    for i in range(9):
+                                        for j in range(9):
+                                            if grid[i][j] != 0:
+                                                prefilled_cells.add((i, j))
+                                    game_won = False
+                                    print(f"{button_texts[idx]} apăsat")
+                                elif button_texts[idx] == 'Mediu':
+                                    usor_pressed = False
+                                    mediu_pressed = True
+                                    greu_pressed = False
+                                    prefilled_cells.clear()
+                                    grid = create_puzzle_with_randomization(solution,
+                                                                            clue_count + 10)  # Nivel mediu cu indicii medii
+                                    selected_cell = None
+                                    for i in range(9):
+                                        for j in range(9):
+                                            if grid[i][j] != 0:
+                                                prefilled_cells.add((i, j))
+                                    game_won = False
+                                    print(f"{button_texts[idx]} apăsat")
+                                elif button_texts[idx] == 'Greu':
+                                    usor_pressed = False
+                                    mediu_pressed = False
+                                    greu_pressed = True
+                                    prefilled_cells.clear()
+                                    grid = create_puzzle_with_randomization(solution,
+                                                                            clue_count)  # Nivel greu cu mai puține indicii
+                                    selected_cell = None
+                                    for i in range(9):
+                                        for j in range(9):
+                                            if grid[i][j] != 0:
+                                                prefilled_cells.add((i, j))
+                                    game_won = False
+                                    print(f"{button_texts[idx]} apăsat")
+                                break  # Se întrerupe bucla după apăsarea unui buton
                     else:
-                        num = int(event.unicode)
-                        if num != 0 and can_place_number(grid, row, col, num):
-                            grid[row][col] = num
-                    selected_cell = None
+                        # Verificare dacă a fost apăsată o celulă în grilă
+                        offset_x = (width - 3 * large_square_size) // 2
+                        offset_y = (height - 3 * large_square_size) // 2
+                        for i in range(9):
+                            for j in range(9):
+                                small_rect = pygame.Rect(offset_x + j * small_square_size,
+                                                         offset_y + i * small_square_size,
+                                                         small_square_size, small_square_size)
+                                if small_rect.collidepoint(event.pos):
+                                    selected_cell = (i, j)
+                                    break
+            elif event.type == pygame.KEYDOWN:
+                if selected_cell and (event.unicode.isdigit() or event.key == pygame.K_BACKSPACE):
+                    row, col = selected_cell
+                    if (row, col) not in prefilled_cells:  # Se permite modificarea doar dacă celula nu este precompletată
+                        if event.key == pygame.K_BACKSPACE or event.unicode == '0':
+                            grid[row][col] = 0  # Se șterge conținutul celulei
+                        else:
+                            num = int(event.unicode)
+                            if num != 0 and can_place_number(grid, row, col, num):
+                                grid[row][col] = num
+                        selected_cell = None
 
-                    # Verificare dacă jucătorul a terminat jocul
-                    if is_grid_complete_and_correct(grid):
-                        game_won = True
-                        print("Ai câștigat! Iată soluția:")
-                        print_solution(solution)
+                        # Verificare dacă jucătorul a terminat jocul
+                        if is_grid_complete_and_correct(grid):
+                            game_won = True
+                            print("Ai câștigat! Iată soluția:")
+                            print_solution(solution)
 
-        # Umplerea ecranului cu culoare albă
-    screen.fill(white)
+            # Umplerea ecranului cu culoare albă
+        screen.fill(white)
 
-    if usor_pressed or mediu_pressed or greu_pressed:
-        # Desenarea grilei 3x3 de pătrate mari
-        offset_x = (width - 3 * large_square_size) // 2
-        offset_y = (height - 3 * large_square_size) // 2
+        if usor_pressed or mediu_pressed or greu_pressed:
+            # Desenarea grilei 3x3 de pătrate mari
+            offset_x = (width - 3 * large_square_size) // 2
+            offset_y = (height - 3 * large_square_size) // 2
 
-        for i in range(3):
-            for j in range(3):
-                large_rect = pygame.Rect(offset_x + i * large_square_size, offset_y + j * large_square_size,
-                                         large_square_size, large_square_size)
-                pygame.draw.rect(screen, black, large_rect, 2)  # Desenarea conturului pătratului mare
+            for i in range(3):
+                for j in range(3):
+                    large_rect = pygame.Rect(offset_x + i * large_square_size, offset_y + j * large_square_size,
+                                             large_square_size, large_square_size)
+                    pygame.draw.rect(screen, black, large_rect, 2)  # Desenarea conturului pătratului mare
 
-                for k in range(3):
-                    for l in range(3):
-                        small_rect = pygame.Rect(offset_x + i * large_square_size + k * small_square_size,
-                                                 offset_y + j * large_square_size + l * small_square_size,
-                                                 small_square_size, small_square_size)
-                        if selected_cell == (j * 3 + l, i * 3 + k):
-                            pygame.draw.rect(screen, selected_color, small_rect)  # Evidențierea celulei selectate
-                        elif (j * 3 + l, i * 3 + k) in prefilled_cells:
-                            pygame.draw.rect(screen, prefilled_color,
-                                             small_rect)  # Desenarea fundalului celulei precompletate
-                        pygame.draw.rect(screen, black, small_rect, 1)  # Desenarea conturului pătratului mic
-                        # Obținerea numărului corespunzător din grilă
-                        number = grid[j * 3 + l][i * 3 + k]
-                        if number != 0:
-                            text = small_font.render(str(number), True, black)
-                            text_rect = text.get_rect(center=small_rect.center)
-                            screen.blit(text, text_rect)
+                    for k in range(3):
+                        for l in range(3):
+                            small_rect = pygame.Rect(offset_x + i * large_square_size + k * small_square_size,
+                                                     offset_y + j * large_square_size + l * small_square_size,
+                                                     small_square_size, small_square_size)
+                            if selected_cell == (j * 3 + l, i * 3 + k):
+                                pygame.draw.rect(screen, selected_color, small_rect)  # Evidențierea celulei selectate
+                            elif (j * 3 + l, i * 3 + k) in prefilled_cells:
+                                pygame.draw.rect(screen, prefilled_color,
+                                                 small_rect)  # Desenarea fundalului celulei precompletate
+                            pygame.draw.rect(screen, black, small_rect, 1)  # Desenarea conturului pătratului mic
+                            # Obținerea numărului corespunzător din grilă
+                            number = grid[j * 3 + l][i * 3 + k]
+                            if number != 0:
+                                text = small_font.render(str(number), True, black)
+                                text_rect = text.get_rect(center=small_rect.center)
+                                screen.blit(text, text_rect)
 
-        if game_won:
-            win_text = font.render("Ai câștigat", True, selected_color)
-            win_rect = win_text.get_rect(center=(width // 2, height // 2))
-            screen.blit(win_text, win_rect)
+            if game_won:
+                win_text = font.render("Ai câștigat", True, selected_color)
+                win_rect = win_text.get_rect(center=(width // 2, height // 2))
+                screen.blit(win_text, win_rect)
 
-    else:
-        # Desenarea butoanelor
-        for idx, rect in enumerate(buttons):
-            # Verificare pentru hover
-            if rect.collidepoint(pygame.mouse.get_pos()):
-                if pygame.mouse.get_pressed()[0]:  # Verificare dacă butonul stâng al mouse-ului este apăsat
-                    pygame.draw.rect(screen, click_color, rect)
+        else:
+            # Desenarea butoanelor
+            for idx, rect in enumerate(buttons):
+                # Verificare pentru hover
+                if rect.collidepoint(pygame.mouse.get_pos()):
+                    if pygame.mouse.get_pressed()[0]:  # Verificare dacă butonul stâng al mouse-ului este apăsat
+                        pygame.draw.rect(screen, click_color, rect)
+                    else:
+                        pygame.draw.rect(screen, hover_color, rect)
                 else:
-                    pygame.draw.rect(screen, hover_color, rect)
-            else:
-                pygame.draw.rect(screen, button_color, rect)
+                    pygame.draw.rect(screen, button_color, rect)
 
-            # Desenarea textului pentru fiecare buton
-            text = font.render(button_texts[idx], True, black)
-            text_rect = text.get_rect(center=rect.center)
-            screen.blit(text, text_rect)
+                # Desenarea textului pentru fiecare buton
+                text = font.render(button_texts[idx], True, black)
+                text_rect = text.get_rect(center=rect.center)
+                screen.blit(text, text_rect)
 
-    # Actualizarea ecranului
-    pygame.display.flip()
+        # Actualizarea ecranului
+        pygame.display.flip()
 
-    # Închiderea Pygame
-pygame.quit()
-sys.exit()
+        # Închiderea Pygame
+    pygame.quit()
+    sys.exit()
 
